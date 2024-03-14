@@ -67,7 +67,7 @@ def generate_response(user_question):
 
 
 def main():
-    st.set_page_config("Gemini Chat PDF",page_icon=":open_file_folder:")
+    st.set_page_config("Gemini Chat PDF",page_icon=":card_index_dividers:")
     st.header("Chat with PDF using Gemini 🤖📄")
     question = st.text_input("Enter the prompt:")
     if question:
