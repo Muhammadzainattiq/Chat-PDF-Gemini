@@ -68,6 +68,11 @@ def generate_response(user_question):
 
 def main():
     st.set_page_config("Gemini Chat PDF",page_icon=":card_index_dividers:")
+    created_style = """
+    color: #888888; /* Light gray color */
+    font-size: 99px; /* Increased font size */
+"""
+    st.markdown("<p style='{}'>➡️created by 'Muhammad Zain Attiq'</p>".format(created_style), unsafe_allow_html=True)
     st.header("Chat with PDF using Gemini 🤖📄")
     question = st.text_input("Enter the prompt:")
     if question:
