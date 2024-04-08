@@ -11,7 +11,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 
-genai.configure(api_key= "AIzaSyA1wygPM_ocs4MgCBTu9DZ3-JCcB9jNelc")
+genai.configure(st.secrets["GOOGLE_API_KEY"])
 
 
 def get_pdf_text(pdf_docs):
@@ -30,7 +30,7 @@ def get_chunks(text):
 
 
 def get_vector_store(text_chunks):
-    embeddings = GoogleGenerativeAIEmbeddings(model= 'models/embedding-001', google_api_key= "AIzaSyA1wygPM_ocs4MgCBTu9DZ3-JCcB9jNelc")
+    embeddings = GoogleGenerativeAIEmbeddings(model= 'models/embedding-001')
     vector_store = FAISS.from_texts(text_chunks, embedding = embeddings)
     vector_store.save_local('faiss_index')
 
@@ -46,15 +46,14 @@ def get_chain():
     Answer:
     """
 
-    model = ChatGoogleGenerativeAI(model = "gemini-pro", temperature=0.4,  google_api_key= "AIzaSyA1wygPM_ocs4MgCBTu9DZ3-JCcB9jNelc")
+    model = ChatGoogleGenerativeAI(model = "gemini-pro", temperature=0.4)
     prompt = PromptTemplate(template= prompt_template,input_variables=["context", "question"] )
     chain = load_qa_chain(llm = model, chain_type= 'stuff', prompt = prompt)
     return chain
 
 
 def generate_response(user_question):
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001",  google_api_key= "AIzaSyA1wygPM_ocs4MgCBTu9DZ3-JCcB9jNelc"
-    )
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     new_db = FAISS.load_local("faiss_index", embeddings=embeddings)
     docs = new_db.similarity_search(user_question)
     chain = get_chain()
@@ -88,7 +87,7 @@ def main():
                     if text_chunks:
                       get_vector_store(text_chunks)
                       st.success("Done")
-                      st.info("Now You can query your pdf>>>>>")
+                      st.info("Now You can query your pdf...")
                 else:
                     st.write("couldnt get the raw text from pdfs")
     question = st.text_input("Enter the prompt:", value="What is there in this pdf?")                
