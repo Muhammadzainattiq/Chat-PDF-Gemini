@@ -10,7 +10,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 
-genai.configure(api_key= st.secrets["GOOGLE_API_KEY"])
+genai.configure(api_key= "AIzaSyA1wygPM_ocs4MgCBTu9DZ3-JCcB9jNelc")
 
 
 def get_pdf_text(pdf_docs):
@@ -29,7 +29,7 @@ def get_chunks(text):
 
 
 def get_vector_store(text_chunks):
-    embeddings = GoogleGenerativeAIEmbeddings(model= 'models/embedding-001')
+    embeddings = GoogleGenerativeAIEmbeddings(model= 'models/embedding-001', google_api_key= "AIzaSyA1wygPM_ocs4MgCBTu9DZ3-JCcB9jNelc")
     vector_store = FAISS.from_texts(text_chunks, embedding = embeddings)
     vector_store.save_local('faiss_index')
 
@@ -45,16 +45,16 @@ def get_chain():
     Answer:
     """
 
-    model = ChatGoogleGenerativeAI(model = "gemini-pro", temperature=0.4)
+    model = ChatGoogleGenerativeAI(model = "gemini-pro", temperature=0.4,  google_api_key= "AIzaSyA1wygPM_ocs4MgCBTu9DZ3-JCcB9jNelc")
     prompt = PromptTemplate(template= prompt_template,input_variables=["context", "question"] )
     chain = load_qa_chain(llm = model, chain_type= 'stuff', prompt = prompt)
     return chain
 
 
 def generate_response(user_question):
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001"
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001",  google_api_key= "AIzaSyA1wygPM_ocs4MgCBTu9DZ3-JCcB9jNelc"
     )
-    new_db = FAISS.load_local("faiss_index", embeddings=embeddings, allow_dangerous_deserialization=True)
+    new_db = FAISS.load_local("faiss_index", embeddings=embeddings)
     docs = new_db.similarity_search(user_question)
     chain = get_chain()
 
@@ -74,21 +74,28 @@ def main():
 """
     st.markdown("<p style='{}'>➡️created by 'Muhammad Zain Attiq'</p>".format(created_style), unsafe_allow_html=True)
     st.header("Chat with PDF using Gemini 🤖📄")
-    question = st.text_input("Enter the prompt:")
-    if question:
-        generate_response(question)
+    
+    
     with st.sidebar:
         st.title("Menu:")
-        pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
+        pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True, type="pdf")
         if st.button ("Submit"):
             with st.spinner("Processing..."):
                 raw_text = get_pdf_text(pdf_docs)
-                text_chunks = get_chunks(raw_text)
-                get_vector_store(text_chunks)
-                st.success("Done")
-    
-    
-    
+                if raw_text:
+                    text_chunks = get_chunks(raw_text)
+                    if text_chunks:
+                      get_vector_store(text_chunks)
+                      st.success("Done")
+                      st.info("Now You can query your pdf>>>>>")
+                else:
+                    st.write("couldnt get the raw text from pdfs")
+    question = st.text_input("Enter the prompt:", value="What is there in this pdf?")                
+    if question:
+        try:
+            generate_response(question)
+        except Exception as e:
+            st.info(e)
 
 if __name__ == "__main__":
     main()
