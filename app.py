@@ -115,7 +115,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-    st.markdown("""
+st.markdown("""
         <div class="footer-container">
             <div class="footer-text">➡️ created by Muhammad Zain Attiq</div>
             <div class="link-container">
