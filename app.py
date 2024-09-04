@@ -72,7 +72,59 @@ def main():
     color: #888888; /* Light gray color */
     font-size: 99px; /* Increased font size */
 """
-    st.markdown("<p style='{}'>➡️created by 'Muhammad Zain Attiq'</p>".format(created_style), unsafe_allow_html=True)
+
+    
+st.markdown("""
+    <style>
+        .header {
+            font-size: 46px;
+            color: #1E90FF; /* Header color */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .footer-text {
+            color: #888888;
+            font-size: 22px;
+        }
+        .link-container {
+            text-align: right;
+        }
+        .link {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 5px 7px; /* Reduced padding */
+            background-color: #f4f4f4;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 12px; /* Reduced font size */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .link:hover {
+            background-color: #0073b1; /* LinkedIn color */
+            color: white;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
+    st.markdown("""
+        <div class="footer-container">
+            <div class="footer-text">➡️ created by Muhammad Zain Attiq</div>
+            <div class="link-container">
+                <a class="link" href="mailto:zainatteeq@gmail.com" target="_blank">Email</a>
+                <a class="link" href="https://www.linkedin.com/in/muhammadzainattiq/" target="_blank">LinkedIn</a>
+                <a class="link" href="https://github.com/Muhammadzainattiq" target="_blank">GitHub</a>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     st.header("Chat with PDF using Gemini 🤖📄")
     
     
